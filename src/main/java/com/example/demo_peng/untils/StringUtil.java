@@ -28,7 +28,7 @@ public class StringUtil {
 
 //    是否仅包含小写字母
     public static Boolean isLowercaseLetterOnly(String input){
-        if(input == null || input.isEmpty()){
+        if(input == null || input.isBlank()){
             return false;
         }
         return input.matches(LOWERCASE_LETTERS_REGEX);
