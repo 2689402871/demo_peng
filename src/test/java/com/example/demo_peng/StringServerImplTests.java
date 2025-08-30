@@ -23,6 +23,7 @@ public class StringServerImplTests {
         log.info("testGetPreviousLetterFromLowercase 输入：{}，输出：{}" , "AAS" , StringUtil.getPreviousLetterFromLowercase("A"));
         log.info("testGetPreviousLetterFromLowercase 输入：{}，输出：{}" , "44#" , StringUtil.getPreviousLetterFromLowercase("4"));
         log.info("testGetPreviousLetterFromLowercase 输入：{}，输出：{}" , "" , StringUtil.getPreviousLetterFromLowercase(""));
+        log.info("testGetPreviousLetterFromLowercase 输入：{}，输出：{}" , " " , StringUtil.getPreviousLetterFromLowercase(" "));
         log.info("testGetPreviousLetterFromLowercase 输入：{}，输出：{}" , null , StringUtil.getPreviousLetterFromLowercase(null));
     }
 
@@ -35,6 +36,7 @@ public class StringServerImplTests {
         log.info("isLowercaseLetterOnly 输入：{}，输出：{}" , "aaa##asd" , StringUtil.isLowercaseLetterOnly("aaa##asd"));
         log.info("isLowercaseLetterOnly 输入：{}，输出：{}" , "asd sdgh" , StringUtil.isLowercaseLetterOnly("asd sdgh"));
         log.info("isLowercaseLetterOnly 输入：{}，输出：{}" , "" , StringUtil.isLowercaseLetterOnly(""));
+        log.info("isLowercaseLetterOnly 输入：{}，输出：{}" , " " , StringUtil.isLowercaseLetterOnly(" "));
         log.info("isLowercaseLetterOnly 输入：{}，输出：{}" , null , StringUtil.isLowercaseLetterOnly(null));
     }
 
@@ -55,6 +57,8 @@ public class StringServerImplTests {
         log.info("-----------------------------------");
         stringServerImpl.removeConsecutive("");
         log.info("-----------------------------------");
+        stringServerImpl.removeConsecutive(" ");
+        log.info("-----------------------------------");
         stringServerImpl.removeConsecutive(null);
     }
 
@@ -74,6 +78,8 @@ public class StringServerImplTests {
         stringServerImpl.replaceConsecutive("slkj*&skkkl");
         log.info("-----------------------------------");
         stringServerImpl.replaceConsecutive("");
+        log.info("-----------------------------------");
+        stringServerImpl.replaceConsecutive(" ");
         log.info("-----------------------------------");
         stringServerImpl.replaceConsecutive(null);
     }

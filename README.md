@@ -65,7 +65,6 @@ mvnw.cmd test
 
 ## 测试说明
 测试类位于 `src/test/java/com/example/demo_peng` 目录下，包含：
-- `DemoPengApplicationTests`：应用上下文测试
 - `StringServerImplTests`：字符串处理功能测试，涵盖各种输入场景
 
 ## 注意事项
