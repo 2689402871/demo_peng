@@ -6,10 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.regex.Matcher;
 
+
+/*
+* Strategy implementation class: Replace consecutive letters with the previous letter in the alphabet.
+* Used for specific behavior extension in the {@link StringHandler} template method
+* */
 @Slf4j
 public class ReplaceConsecutiveImpl extends StringHandler {
 
-//    Replace consecutive letters with the previous letter in the alphabet.
     @Override
     protected String specificMethod(Matcher matcher, String str) {
         var group = matcher.group();
@@ -21,7 +25,7 @@ public class ReplaceConsecutiveImpl extends StringHandler {
                 })
                 .orElseGet(() -> {
                     String processedStr = str.replace(group, "");
-                    log.info("{}", processedStr, group);
+                    log.info("{}", processedStr);
                     return processedStr;
                 });
     }
