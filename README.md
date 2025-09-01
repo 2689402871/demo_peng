@@ -1,73 +1,160 @@
-# demo_peng 项目说明
+# String Processing Tool
 
-## 项目简介
-`demo_peng` 是一个基于 Spring Boot 的演示项目，主要包含字符串处理相关的功能，如删除连续重复字符、替换连续重复字符等操作，并提供了对应的测试用例。
+A Java-based string processing library developed using the Template Method pattern for efficiently handling consecutive duplicate characters in strings.
 
-## 技术栈
-- Spring Boot 2.7.10
-- Java 11
-- Maven 3.9.11（通过 Maven Wrapper 管理）
-- JUnit 5（单元测试）
-- Lombok（简化代码）
+## Features
 
-## 项目结构
+- **Remove Consecutive Duplicate Characters**: Delete three or more consecutive identical characters
+- **Replace Consecutive Duplicate Characters**: Replace consecutive characters with the previous letter in the alphabet
+- **Input Validation**: Automatic validation for lowercase letter strings only
+- **Processing History**: Returns results from each processing step for easy tracking
+- **Template Method Design**: Highly extensible architecture using design patterns
+
+## Technical Architecture
+
+### Design Pattern
+This project uses the **Template Method Pattern**:
+- `StringHandler` abstract class defines the algorithm skeleton
+- `RemoveConsecutiveImpl` and `ReplaceConsecutiveImpl` implement specific processing logic
+- Supports future expansion of new processing strategies
+
+### Core Components
 ```
-demo_peng/
-├── .mvn/                      # Maven Wrapper 配置
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── com/example/demo_peng/
-│   │   │       ├── DemoPengApplication.java  # 应用入口类
-│   │   │       ├── handler/                  # 字符串处理抽象及实现
-│   │   │       ├── service/                  # 服务接口及实现
-│   │   │       └── untils/                   # 工具类（字符串处理工具）
-│   │   └── resources/
-│   │       └── application.properties        # 应用配置文件
-│   └── test/                                 # 单元测试代码
-├── .gitignore                                # Git 忽略文件配置
-├── mvnw.cmd                                  # Windows 下的 Maven Wrapper 脚本
-└── pom.xml                                   # Maven 项目配置
+src/
+├── handler/
+│   ├── StringHandler.java          # Abstract template class
+│   └── impl/
+│       ├── RemoveConsecutiveImpl.java    # Removal strategy implementation
+│       └── ReplaceConsecutiveImpl.java   # Replacement strategy implementation
+├── service/
+│   ├── StringServer.java           # Service interface
+│   └── impl/
+│       └── StringServerImpl.java   # Service implementation
+├── untils/
+│   └── StringUtil.java             # String utility class
+└── StringServerImplTests.java      # Unit tests
 ```
 
-## 核心功能
-1. **字符串工具类（StringUtil）**
-   - 校验 是否仅包含小写字母（`isLowercaseLetterOnly`）
-   - 获取小写字母的前一位字母（`getPreviousLetterFromLowercase`）
+## Usage
 
-2. **字符串处理服务（StringServer）**
-   - 删除连续3个及以上的重复字符（`removeConsecutive`）
-   - 将连续3个及以上的重复字符替换为字母表中前一位字母（`replaceConsecutive`）
+### Basic Usage
 
-## 如何运行
-### 前提条件
-- JDK 11 或更高版本
+```java
+// Create service instance
+StringServer stringServer = new StringServerImpl();
 
-### 编译和运行
-1. 克隆项目到本地
-2. 进入项目根目录
-3. 使用 Maven Wrapper 编译项目：
-   ```bash
-   # Windows
-   mvnw.cmd clean compile
-   ```
-4. 运行应用：
-   ```bash
-   # Windows
-   mvnw.cmd spring-boot:run
-   ```
+// Remove consecutive duplicate characters
+List<String> removeResult = stringServer.removeConsecutive("aabcccbbad");
+// Result: ["aabbbad", "aaad", "d"]
 
-### 运行测试
+// Replace consecutive duplicate characters
+List<String> replaceResult = stringServer.replaceConsecutive("aabcccbbad");
+// Result: ["aabbbbad", "aaaad", "d"]
+```
+
+### API Description
+
+#### 1. Remove Consecutive Characters
+```java
+/**
+ * Remove three or more consecutive identical characters
+ * @param str Input string (must be lowercase letters only)
+ * @return History list of processing steps
+ */
+List<String> removeConsecutive(String str);
+```
+
+#### 2. Replace Consecutive Characters
+```java
+/**
+ * Replace three or more consecutive identical characters with previous letter
+ * Note: 'a' will be replaced with empty string
+ * @param str Input string (must be lowercase letters only)
+ * @return History list of processing steps
+ */
+List<String> replaceConsecutive(String str);
+```
+
+### Input Requirements
+- String must contain only lowercase letters (a-z)
+- Cannot be empty string, blank string, or null
+- Cannot contain numbers, uppercase letters, special characters, or spaces
+
+## Examples
+
+### Example 1: Remove Consecutive Characters
+```java
+String input = "aabcccbbad";
+List<String> result = stringServer.removeConsecutive(input);
+// Processing steps:
+// 1. Find "ccc" and remove → "aabbbad"
+// 2. Find "bbb" and remove → "aaad" 
+// 3. Find "aaa" and remove → "d"
+// Final result: ["aabbbad", "aaad", "d"]
+```
+
+### Example 2: Replace Consecutive Characters
+```java
+String input = "aabcccbbad";
+List<String> result = stringServer.replaceConsecutive(input);
+// Processing steps:
+// 1. Find "ccc" replace with "b" → "aabbbbad"
+// 2. Find "bbb" replace with "a" → "aaaad"
+// 3. Find "aaa" replace with "" → "d"
+// Final result: ["aabbbbad", "aaaad", "d"]
+```
+
+### Example 3: Edge Cases
+```java
+// Invalid inputs return empty list
+stringServer.removeConsecutive("abc123"); // Returns: []
+stringServer.removeConsecutive("");       // Returns: []
+stringServer.removeConsecutive(null);     // Returns: []
+```
+
+## Development Extension
+
+### Adding New Processing Strategies
+
+1. Create new implementation class extending `StringHandler`
+2. Implement the `specificMethod` method
+
+```java
+@Slf4j
+public class CustomHandlerImpl extends StringHandler {
+    @Override
+    protected String specificMethod(Matcher matcher, String str) {
+        String group = matcher.group();
+        // Implement custom processing logic
+        String processedStr = str.replace(group, "custom");
+        log.info("Processed: {}", processedStr);
+        return processedStr;
+    }
+}
+```
+
+3. Register new strategy in the service layer
+```java
+public class StringServerImpl implements StringServer {
+    private final StringHandler customHandler = new CustomHandlerImpl();
+    
+    public List<String> customMethod(String str) {
+        return customHandler.run(str);
+    }
+}
+```
+
+## Testing
+
+The project includes comprehensive unit tests. Run with:
+
 ```bash
-# Windows
-mvnw.cmd test
+mvn test
 ```
 
-## 测试说明
-测试类位于 `src/test/java/com/example/demo_peng` 目录下，包含：
-- `StringServerImplTests`：字符串处理功能测试，涵盖各种输入场景
-
-## 注意事项
-- 输入字符串需为纯小写字母，否则则会被视为无效输入，不进行处理
-- 连续3个及以上相同字符会被视为需要处理的连续字符
-- 替换连续字符时，若字符为 'a'，则替换结果为空（因 'a' 没有前一位字母）
+Test coverage includes:
+- Utility method tests
+- Removal functionality tests
+- Replacement functionality tests
+- Edge case tests
+- Invalid input tests
