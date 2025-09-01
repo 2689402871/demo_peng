@@ -4,29 +4,45 @@ package com.example.demo_peng.handler;
 import com.example.demo_peng.untils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
 public abstract class StringHandler {
 
-//    子类 具体实现方法
+//    subclass-specific implementation method
     protected abstract String specificMethod(Matcher matcher, String str);
 
-//    字符串处理 公共方法
-    public final void run(String str){
-        if(!StringUtil.isLowercaseLetterOnly(str)){
-            log.error("输入有误，不处理。输入：{}", str);
-            return;
-        }
-        String crruntStr = str;
-        Pattern compile = Pattern.compile(StringUtil.CANSECUTIVE_LETTERS_REGEX);
-        Matcher matcher = compile.matcher(crruntStr);
-        while (matcher.find()){
-//            调用子类实现
-            crruntStr = specificMethod(matcher, crruntStr);
-            matcher = compile.matcher(crruntStr);
-        }
+//    Preload the Pattern
+    private static final Pattern CONSECUTIVE_PATTERN = Pattern.compile(StringUtil.CANSECUTIVE_LETTERS_REGEX);
+
+//    common string processing method
+    public final List<String> run(String str) {
+        return Optional.ofNullable(str)
+                .filter(StringUtil::isLowercaseLetterOnly)
+                .map(this::processConsecutive)
+                .orElseGet(() -> {
+                    log.error("Input error, not processed. input：{}", str);
+                    return new ArrayList<>(); // Illegal input returns an empty list
+                });
     }
 
+    private List<String> processConsecutive(String original) {
+        List<String> processHistory = new ArrayList<>();
+
+        String currentStr = original;
+        Matcher matcher = CONSECUTIVE_PATTERN.matcher(currentStr);
+
+        while (matcher.find()) {
+            currentStr = specificMethod(matcher, currentStr);
+            // Record the results of each processing step
+            processHistory.add(currentStr);
+            // Re match the updated string
+            matcher = CONSECUTIVE_PATTERN.matcher(currentStr);
+        }
+        return processHistory;
+    }
 }

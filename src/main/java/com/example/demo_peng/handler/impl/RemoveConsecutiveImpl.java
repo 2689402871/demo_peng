@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 @Slf4j
 public class RemoveConsecutiveImpl extends StringHandler {
 
-//    将联系字母替换为空
+//    Replace consecutive letters with empty string
     @Override
     protected String specificMethod(Matcher matcher, String str) {
         String group = matcher.group();

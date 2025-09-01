@@ -9,18 +9,20 @@ import java.util.regex.Matcher;
 @Slf4j
 public class ReplaceConsecutiveImpl extends StringHandler {
 
-//    将连续字母替换为字母表中前一位字母，并按格式输出
+//    Replace consecutive letters with the previous letter in the alphabet.
     @Override
     protected String specificMethod(Matcher matcher, String str) {
-        String group = matcher.group();
-        Character previousLetter = StringUtil.getPreviousLetterFromLowercase(group);
-        if(previousLetter != null){
-            str = str.replace(group, previousLetter.toString());
-            log.info("{}, {} is replaced by {}", str, group, previousLetter);
-        }else{
-            str = str.replace(group, "");
-            log.info(str);
-        }
-        return str;
+        var group = matcher.group();
+        return StringUtil.getPreviousLetterFromLowercase(group)
+                .map(prevLetter -> {
+                    String processedStr = str.replace(group, prevLetter.toString());
+                    log.info("{}: {} is replaced by {}", processedStr, group, prevLetter);
+                    return processedStr;
+                })
+                .orElseGet(() -> {
+                    String processedStr = str.replace(group, "");
+                    log.info("{}", processedStr, group);
+                    return processedStr;
+                });
     }
 }
