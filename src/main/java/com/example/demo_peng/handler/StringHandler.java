@@ -13,13 +13,28 @@ import java.util.regex.Pattern;
 @Slf4j
 public abstract class StringHandler {
 
-//    subclass-specific implementation method
-    protected abstract String specificMethod(Matcher matcher, String str);
-
-//    Preload the Pattern
+    //    Preload the Pattern
     private static final Pattern CONSECUTIVE_PATTERN = Pattern.compile(StringUtil.CANSECUTIVE_LETTERS_REGEX);
 
-//    common string processing method
+    /**
+     * Hook Method：To be implemented by subclasses, defining how to handle the matched consecutive characters.
+     *
+     * @param matcher Current matcher
+     * @param str Current String
+     * @return Processed string
+     */
+    protected abstract String specificMethod(Matcher matcher, String str);
+
+    /**
+     * Template method: Define a fixed process for string processing
+     * 1. Validate the input
+     * 2. Cyclically search for consecutive repeated letters
+     * 3. Call the specific processing method of the subclass
+     * 4. Record the result of each step
+     *
+     * @param str Input string
+     * @return Historical records of the processing process
+     */
     public final List<String> run(String str) {
         return Optional.ofNullable(str)
                 .filter(StringUtil::isLowercaseLetterOnly)
@@ -30,7 +45,10 @@ public abstract class StringHandler {
                 });
     }
 
-    private List<String> processConsecutive(String original) {
+    /**
+     * Execute the processing loop: find all consecutive repeated characters and hand them over to the subclass for processing.
+     */
+    private final List<String> processConsecutive(String original) {
         List<String> processHistory = new ArrayList<>();
 
         String currentStr = original;
