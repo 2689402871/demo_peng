@@ -2,12 +2,10 @@ package com.example.demo_peng.handler.impl;
 
 import com.example.demo_peng.handler.StringHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;
 
 @Slf4j
-@Component
 public class RemoveConsecutiveImpl extends StringHandler {
 
 //    将联系字母替换为空

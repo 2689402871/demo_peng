@@ -4,14 +4,10 @@ import com.example.demo_peng.service.Impl.StringServerImpl;
 import com.example.demo_peng.untils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 @Slf4j
 public class StringServerImplTests {
 
-    @Autowired
     private StringServerImpl stringServerImpl;
 
 //      测试根据小写字符串 返回字母表中前一位字母方法
