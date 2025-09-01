@@ -1,36 +1,34 @@
 package com.example.demo_peng.untils;
 
 
+import java.util.Optional;
+
 public class StringUtil {
 
-//    连续3个或以上字母 正则表达式
+//    regular expression for three or more consecutive letters
     public static final String CANSECUTIVE_LETTERS_REGEX = "(.)\\1{2,}";
 
+//    regular expression for lowercase letters
     public static final String LOWERCASE_LETTERS_REGEX = "^[a-z]+$";
 
-//    最小字母
+//    The smallest letter
     public static final char SMALLEST_LETTER = 'a';
 
-//    根据小写字符串 返回字母表中前一位字母  最小字母则返回null
-    public static Character getPreviousLetterFromLowercase(String input){
-//        输入不规范 则返回null
+//    Return the previous letter in the alphabet based on a lowercase string; return null for the smallest letter.
+    public static Optional<Character> getPreviousLetterFromLowercase(String input){
+//        If the input is invalid, return null.
         if(!isLowercaseLetterOnly(input)){
-            return null;
+            return Optional.empty();
         }
-        char[] chars = input.toCharArray();
-        char c = chars[0];
-        if(SMALLEST_LETTER == c){
-            return null;
-        }
-        return (char)(c - 1);
-
+        char c = input.charAt(0);
+        return (c == SMALLEST_LETTER) ? Optional.empty() : Optional.of((char) (c - 1));
     }
 
-//    是否仅包含小写字母
-    public static Boolean isLowercaseLetterOnly(String input){
-        if(input == null || input.isBlank()){
-            return false;
-        }
-        return input.matches(LOWERCASE_LETTERS_REGEX);
+//    Determine whether it contains only lowercase letters.
+    public static boolean isLowercaseLetterOnly(String input){
+        return Optional.ofNullable(input)
+                .filter(s -> !s.isBlank())
+                .filter(s -> s.matches(LOWERCASE_LETTERS_REGEX))
+                .isPresent();
     }
 }
